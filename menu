@@ -1,6 +1,6 @@
 #!/bin/bash
 #IP
-zenon="https://vss-tgh.000webhostapp.com/scrip"
+zenon="https://raw.githubusercontent.com/Teerut26/VPN/master"
 rm -f menu
 mkdir -p /home/vps/public_html/file
 echo "" > /home/vps/public_html/file/index.php

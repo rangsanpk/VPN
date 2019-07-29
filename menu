@@ -3275,10 +3275,8 @@ clear
 clear
 cr
 ok "➡ install VBooter DDOS"
-cd /home/vps/public_html/
+cd /var/www/html/
 wget https://raw.githubusercontent.com/Teerut26/VPN/master/UDP.php
-echo -e "http://$IP:81/UDP.php"
-exit
 ;;
 00)
 clear

@@ -209,6 +209,9 @@ echo -e "\033[1;35m { 41 } ติดตั้ง Planetwork-DDOS  "
 sleep 0.01
 echo -e "\033[1;31m { 42 } ใช้ Planetwork-DDOS  "
 
+sleep 0.01
+echo -e "\033[1;31m { 43 } ติดตั้ง VBooter DDOS  "
+
 	echo -e "\033[1;31m-------------------------------------------------------" 
 
 echo -e "\e[0m"

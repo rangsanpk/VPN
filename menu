@@ -3295,8 +3295,9 @@ cd
 wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
 apt-get install unzip
 unzip ngrok-stable-linux-amd64.zip
-cd ngrok
-chmod +x *
+chmod +x ngrok
+read -p "Authtoken   = " authtoken
+./ngrok authtoken $authtoken
 ;;
 00)
 clear

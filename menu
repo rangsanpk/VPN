@@ -3292,10 +3292,10 @@ cr
 ok "➡ install Ngrok"
 cd
 cd
-apt-get install unzip
 wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+apt-get install unzip
 unzip ngrok-stable-linux-amd64.zip
-cd ngrok-stable-linux-amd64
+cd ngrok
 chmod +x *
 ;;
 00)

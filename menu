@@ -3294,10 +3294,10 @@ ok "➡ install Ngrok"
 cd
 cd
 wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-apt-get install unzip
+apt-get install unzip -y
 unzip ngrok-stable-linux-amd64.zip
 chmod +x ngrok
-read -p "Authtoken   = " authtoken
+read -p "Authtoken   = "authtoken
 ./ngrok authtoken $authtoken
 ;;
 00)

@@ -212,6 +212,9 @@ echo -e "\033[1;31m { 42 } ใช้ Planetwork-DDOS  "
 sleep 0.01
 echo -e "\033[1;35m { 43 } ติดตั้ง VBooter DDOS  "
 
+sleep 0.01
+echo -e "\033[1;31m { 44 } ติดตั้ง ngrok  "
+
 	echo -e "\033[1;31m-------------------------------------------------------" 
 
 echo -e "\e[0m"
@@ -3277,6 +3280,16 @@ cr
 ok "➡ install VBooter DDOS"
 cd /var/www/html/
 wget https://raw.githubusercontent.com/Teerut26/VPN/master/UDP.php
+;;
+44)
+clear
+clear
+cr
+ok "➡ install Ngrok"
+cd
+sudo apt update
+sudo apt install snapd
+sudo snap install ngrok
 ;;
 00)
 clear

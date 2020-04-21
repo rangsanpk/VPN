@@ -3291,9 +3291,11 @@ clear
 cr
 ok "➡ install Ngrok"
 cd
-sudo apt update
-sudo apt install snapd
-sudo snap install ngrok
+cd
+wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+unzip ngrok-stable-linux-amd64.zip
+cd ngrok-stable-linux-amd64
+chmod +x *
 ;;
 00)
 clear

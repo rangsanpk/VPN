@@ -3193,7 +3193,7 @@ read -p "Authtoken   = "authtoken
 00)
 clear
 cd /usr/bin
-wget -q -O z "$zenon/menu"
+wget -q -O z "$zenon/menu2"
 chmod +x z
 z
 ;;

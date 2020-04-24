@@ -53,12 +53,13 @@ clear
 clear 
 cr
 echo -e ""
-	echo -e "\033[1;35m-------------------------------------------------------" 
-	echo -e "\033[1;35m||||||||||||||| SYSTEM MANAGER VPN SSH ||||||||||||||||" 
-	echo -e "\033[1;35m-------------------------------------------------------" 
+	echo -e "\033[1;34m-------------------------------------------------------" 
+	echo -e "\033[1;34m||||||||||||||||||| TOOLS VPN SSH |||||||||||||||||||||" 
+	echo -e "\033[1;34m-------------------------------------------------------" 
 
 sleep 0.01
 echo -e "\033[1;32m { 26 } เปลี่ยนรหัสผ่านเซิฟร์เวอร์  "
+
 
 	echo -e "\033[1;36m-------------------------------------------------------" 
 	echo -e "\033[1;36m||||||||||||||||| WEBAPNEL VPN SSH ||||||||||||||||||||" 
@@ -2297,6 +2298,743 @@ else
 opcao=$zenonnew2
 fi
 case $opcao in
+ 1 )
+#!/bin/bash
+if [ -e "/var/lib/premium-script" ]; then
+clear
+clear
+	else
+		mkdir /var/lib/premium-script;
+fi
+
+clear
+clear
+cr
+echo "     ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
+     ┣ Create an account PPTP ..?   
+     ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+read -p "     ┣ Username : " username
+grep -E "^$username" /etc/ppp/chap-secrets >/dev/null
+if [ $? -eq 0 ]; then
+clear
+clear
+cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ ชื่อผู้ใช้  $username มีอยู่แล้ว
+        ╰━━━━━━━━━━━━━━━━━━━━━━━━╯ 
+"
+exit 0
+else
+read -p "     ┣ Password : " password
+read -p "     ┣ Expired  : " masa_aktif
+
+today=`date +%s`
+masa_aktif_detik=$(( $masa_aktif * 86400 ))
+saat_expired=$(($today + $masa_aktif_detik))
+tanggal_expired=$(date -u --date="1970-01-01 $saat_expired sec GMT" +%Y/%m/%d)
+tanggal_expired_display=$(date -u --date="1970-01-01 $saat_expired sec GMT" '+%d %B %Y')
+clear
+clear
+echo "Creating Account..."
+sleep 0.5
+echo " สร้างชื่อ $username"
+sleep 0.5
+echo " รหัสผ่าน $password"
+sleep 0.5
+MYIP=$(wget -qO- ipv4.icanhazip.com)
+echo "$username	*	$password	*" >> /etc/ppp/chap-secrets
+echo "$username *   $password   *  $saat_expired"  >> /var/lib/premium-script/data-user-pptp
+clear
+clear
+  cr          
+  echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━━╮  
+        ┃  PPTP VPN พร้อมใช้งาน  
+        ┣━━━━━━━━━━━━━━━━━━━━━━━━━╯ 
+        ┣ ไอพี     : $MYIP          
+        ┣ ชื่อผู้ใช้   : $username         
+        ┣ รหัสผ่าน  : $password            
+        ┣ หมดอายุ  : $tanggal_expired_display   
+        ┣━━━━━━━━━━━━━━━━━━━━━━━━━╯ "
+fi
+exit
+;;
+2 )
+clear
+clear
+cr
+echo "     ╭━━━━━━━━━━━━━━━━━━━━━━━━━━╮ 
+     ┣ ลบผู้ใช้งาน PPTP ..?    
+     ┣━━━━━━━━━━━━━━━━━━━━━━━━━━╯ "
+read -p "     ╰┫ใส่ชื่อผู้ใช้ที่ต้องการลบ : " username
+grep -E "^$username" /etc/ppp/chap-secrets >/dev/null
+if [ $? -eq 0 ]; then
+# changing the password
+username2="/$username/d";
+sed -i $username2 /etc/ppp/chap-secrets
+sed -i $username2 /var/lib/premium-script/data-user-pptp
+sed -i '/^$/d' /etc/ppp/chap-secrets
+sed -i '/^$/d' /var/lib/premium-script/data-user-pptp
+clear
+clear
+  cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ ลบบัญชีชื่อ $username เรียบร้อย   
+        ╰━━━━━━━━━━━━━━━━━━━━━━━━━╯
+ "
+exit        
+else
+clear
+clear
+  cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ ไม่พบชื่อผู้ใช้  $username 
+        ╰━━━━━━━━━━━━━━━━━━━━━━━━╯ 
+"
+    exit 1
+fi
+;;
+3 )
+last | grep ppp | grep still | awk '{print "        ┃",$1,"" }' > /tmp/login-db-pptp.txt;
+#printf "%-5s %-15s %-15s %-15s\n" "" "$username" "$Local" "" > /tmp/login-db-pptp.txt;
+clear
+clear
+cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┃ PPTP VPN User Login 
+        ╰━━━━━┳━━━━━━━━━━━━━━━━━╯
+        ╭━━━━━┻━━━━━━━━╮ 
+        ┃ UserName       
+        ┃  "
+     cat /tmp/login-db-pptp.txt
+ echo "        ╰━━━━━━━━━━━━━━╯
+"     
+exit
+;;
+4)
+
+chmod +x /var/lib/premium-script/data-user-pptp
+clear
+clear
+cr
+echo "       ╭━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+read -p "       ╰┫Username : " username
+grep -E "^$username" /var/lib/premium-script/data-user-pptp >/dev/null
+if [ $? -eq 0 ]; then
+userpass=`cat /var/lib/premium-script/data-user-pptp | grep "^$username" | awk '{print $3}'`
+saat_expired=`cat /var/lib/premium-script/data-user-pptp | grep "^$username" | awk '{print $5}'`
+tanggal_expired=$(date -u --date="1970-01-01 $saat_expired sec GMT" +%Y/%m/%d)
+tanggal_expired_display=$(date -u --date="1970-01-01 $saat_expired sec GMT" '+%d %B %Y')
+clear
+clear
+  cr
+echo "       ╭━━━━━━━━━━━━━━━━━━━━━━━━━╮
+       ┃  รายละเอียดบัญชี  $username 
+       ┣━━━━━━━━━━━━━━━━━━━━━╯ 
+       ┣ ชื่อผู้ใช้   : $username         
+       ┣ รหัสผ่าน  : $userpass            
+       ┣ หมดอายุ  : $tanggal_expired_display   
+       ┣━━━━━━━━━━━━━━━━━━━━━━━━━╯ 
+       ╰━━┫ http://www.ZENON.TK   
+"
+exit
+else
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ ไม่พบชื่อผู้ใช้  $username 
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯ 
+"
+    exit 1
+fi
+;;
+5)
+clear
+clear
+cr
+echo "echo "Script Created By truepayvpn"" > /usr/local/bin/infouser-pptp
+echo "echo "Script Created By truepayvpn"" > /usr/local/bin/expireduser-pptp
+chmod +x /usr/local/bin/infouser-pptp
+chmod +x /usr/local/bin/expireduser
+chmod +x /etc/ppp/chap-secrets
+chmod +x /var/lib/premium-script/data-user-pptp
+
+totalaccounts=`cat /var/lib/premium-script/data-user-pptp | wc -l`
+for((i=1; i<=$totalaccounts; i++ ))
+       do       
+       username=`cat /var/lib/premium-script/data-user-pptp | awk '{print $1}' | head -n $i | tail -n 1`
+       userexpireinseconds=`cat /var/lib/premium-script/data-user-pptp | awk '{print $5}' | head -n $i | tail -n 1`
+       tglexp=`date -d @$userexpireinseconds`             
+       tgl=`echo $tglexp|awk -F" " '{print $3}'`
+       bulantahun=`echo $tglexp |awk -F" " '{print $2,$6}'`
+       todaystime=`date +%s`
+	   seeder=s/^$username/#$username/g
+       if [ $userexpireinseconds -ge $todaystime ] ;
+           then
+           timeto7days=$(( $todaystime + 604800 ))
+                if [ $userexpireinseconds -le $timeto7days ];
+                then                     
+                     echo "echo "User : $username will expired on : $tgl $bulantahun"" >> /usr/local/bin/infouser-pptp
+                fi
+       else
+       echo "echo "User : $username expired on date : $tgl $bulantahun"" >> /usr/local/bin/expireduser-pptp
+	   sed -i $seeder /var/lib/premium-script/data-user-pptp
+	   sed -i $seeder /etc/ppp/chap-secrets
+	   sed -i "s|##|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|###|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|####|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|#####|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|######|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|#######|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|########|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|#########|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|##########|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|###########|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|############|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|#############|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|##############|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|###############|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|################|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|#################|#|g" /etc/ppp/chap-secrets
+	   sed -i "s|##|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|###|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|####|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|#####|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|######|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|#######|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|########|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|#########|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|##########|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|###########|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|############|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|#############|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|##############|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|###############|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|################|#|g" /var/lib/premium-script/data-user-pptp
+	   sed -i "s|#################|#|g" /var/lib/premium-script/data-user-pptp
+       fi
+done
+clear
+clear
+cr
+ echo  "           ╭━━━━━━━━━━━━━━━━╮  
+           ┣ ไม่รู้ว่ะ กูงงกับเมนูนี้   
+           ╰━━━━━━━━━━━━━━━━╯  
+  "
+  exit
+;;
+6)
+totalaccounts=`cat /var/lib/premium-script/data-user-pptp | wc -l`
+echo " " > /tmp/alluser-pptp-data
+for((i=1; i<=$totalaccounts; i++ ))
+       do  
+       
+username=`cat /var/lib/premium-script/data-user-pptp | awk '{print $1}' | head -n $i | tail -n 1`
+userpass=`cat /var/lib/premium-script/data-user-pptp | awk '{print $3}' | head -n $i | tail -n 1`
+saat_expired=`cat /var/lib/premium-script/data-user-pptp | awk '{print $5}' | head -n $i | tail -n 1`
+tanggal_expired=$(date -u --date="1970-01-01 $saat_expired sec GMT" +%Y/%m/%d)
+tanggal_expired_display=$(date -u --date="1970-01-01 $saat_expired sec GMT" '+%d %B %Y')
+printf "%-2s %-15s %-15s %-15s\n" "" "$username" "$userpass" "$tanggal_expired_display" >> /tmp/alluser-pptp-data
+#echo "   $username  ┈  $userpass  ┈  $tanggal_expired_display " >> /tmp/alluser-pptp-data
+done
+clear
+clear
+cr
+echo " ╭━━━━┻━━━━━━━━━━━━━━━━━━━╮    "
+echo " ┣ VPN PPTP Accounts    "
+echo " ╰━━┳━━━━━━━━━━━┳━━━━━━━━━╯    "
+echo " ╭━━┻━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮   "
+printf "%-2s %-15s %-15s %-15s\n" "" "username" "Password" "Expired_display"
+cat /tmp/alluser-pptp-data
+echo " ╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯  
+  "
+exit
+;;
+7)
+clear
+clear
+cr
+echo ""
+service pptpd restart
+exit
+;;
+8)
+ok ""
+red " แน่ใจว่าต้องการถอนติดตั้ง PPTP  Y/n   "
+ok ""
+read -p " : " selet
+
+if [[ "$selet" = "y" || "$selet" = "Y" ]]; then
+rm -r -f /etc/pptpd
+apt-get -y --purge remove pptpd > /dev/null 2>&1
+clear
+clear
+cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━╮    "
+echo "        ┣ ถอนติดตั้ง PPTP เรียบร้อย    "
+echo "        ╰━━━━━━━━━━━━━━━━━━━━━━━━╯    "
+exit
+elif [[ "$selet" = "n" || "$selet" = "N" ]]; then
+clear
+clear
+cr
+echo "          ╭━━━━━━━━━━━━━━━━━━━━━━╮    "
+echo "          ┣ ยกเลิกถอนติดตั้ง PPTP    "
+echo "          ╰━━━━━━━━━━━━━━━━━━━━━━╯    "
+exit
+fi
+;;
+
+esac
+clear
+clear
+cr
+echo -e "${z1}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣    พิมพ์คำสั่งไม่ถูกต้อง
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+29 )
+#!/bin/bash
+#DEV BY ZENON.TK
+clear
+clear
+if [[ "$VERSION_ID" = 'VERSION_ID="7"' || "$VERSION_ID" = 'VERSION_ID="8"' || "$VERSION_ID" = 'VERSION_ID="14.04"' ]]; then
+if [[ "$truepay2" = "" ]]; then
+clear
+clear
+cr
+echo "
+ =================
+  รีสตาร์ตระบบต่างๆ
+ =================
+  1. dropbear
+  2. nginx
+  3. php5
+  4. webmin
+  5. squid3
+  6. openvpn
+  7. ssh
+"
+read -p " Enter Number : " opcao
+else
+opcao=$truepay2
+fi
+case $opcao in
+
+1 )
+service dropbear restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ dropbear สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+2 )
+service nginx restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣  รีสตาร์ nginx สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+3)
+service php5 restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣  รีสตาร์ php5 สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+4)
+service webmin restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣  รีสตาร์ webmin สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+5)
+service squid3 restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ squid3 สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+6)
+service openvpn restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ openvpn สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+7)
+service ssh restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣   รีสตาร์ ssh สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+esac
+
+clear
+clear
+cr
+echo -e "${z1}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣    พิมพ์คำสั่งไม่ถูกต้อง
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+
+elif [[ "$VERSION_ID" = 'VERSION_ID="9"' || "$VERSION_ID" = 'VERSION_ID="16.04"' ]]; then
+if [[ "$zenonnew2" = "" ]]; then
+clear
+clear
+cr
+echo "
+ =================
+  รีสตาร์ตระบบต่างๆ
+ =================
+  1. dropbear
+  2. nginx
+  3. php7.0
+  4. webmin
+  5. squid3
+  6. openvpn
+  7. ssh
+"
+read -p " Enter Number : " opcao
+else
+opcao=$zenonnew2
+fi
+case $opcao in
+
+1 )
+service dropbear restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ dropbear สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+2 )
+service nginx restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣  รีสตาร์ nginx สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+3)
+service php7.0 restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ php7.0 สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+4)
+service webmin restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣  รีสตาร์ webmin สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+5)
+service squid3 restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ squid3 สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+6)
+service openvpn restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣ รีสตาร์ openvpn สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+7)
+service ssh restart
+clear
+clear
+cr
+echo -e "${z3}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣   รีสตาร์ ssh สำเร็จ
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit
+;;
+esac
+
+clear
+clear
+cr
+echo -e "${z1}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣    พิมพ์คำสั่งไม่ถูกต้อง
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+fi
+exit
+;;
+30 )
+#!/bin/bash
+#DEV BY ZENON.TK
+clear
+clear
+cr
+echo
+	cat /etc/openvpn/log.log
+echo -e ""
+exit
+;;
+31 )
+#!/bin/bash
+#DEV BY ZENON.TK
+clear
+clear
+cr
+echo
+chek=$(cat /etc/issue)
+echo "
+$chek
+"
+
+exit
+;;
+32 )
+#!/bin/bash
+#DEV BY ZENON.TK
+clear
+clear
+cr
+echo ""
+echo ""
+echo -e "\e[32m    ##############################################################    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #   >>>>> [ ระบบสคริป FB :                         ] <<<<<      #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #             SYSTEM MANAGER VPN SSH                         #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #    Dropbear       :   22, 443                              #    "
+echo -e "\e[32m    #    SSL            :   444                                  #    "
+echo -e "\e[32m    #    Squid3         :   3128, 8080                           #    "
+echo -e "\e[32m    #    OpenVPN        :   TCP 1194                             #    "
+echo -e "\e[32m    #    Nginx          :   81                                   #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #                 TOOLS VPN SSH                              #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #    Useronline     :   http://$IP:81/online         #    "
+echo -e "\e[32m    #    Vnstat         :   http://$IP:81/bandwidth      #    "
+echo -e "\e[32m    #    Webmin         :   http://$IP:10000          #    "
+echo -e "\e[32m    #    ConfigVPN      :   http://$IP:81/zenon.ovpn     #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #             LIMIT SETTINGS VPN SSH                         #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    #    Timezone       :   Asia/Bangkok                         #    "
+echo -e "\e[32m    #    IPV6           :   [OFF]                                #    "
+echo -e "\e[32m    #    Cron Scheduler :   [ON]                                 #    "
+echo -e "\e[32m    #    Fail2Ban       :   [ON]                                 #    "
+echo -e "\e[32m    #    DDOS Deflate   :   [ON]                                 #    "
+echo -e "\e[32m    #    LibXML Parser  :   [ON]                                 #    "
+echo -e "\e[32m    #                                                            #    "
+echo -e "\e[32m    ##############################################################    "
+echo -e "\e[0m                                                                       "
+exit
+;;
+33 )
+#!/bin/bash
+#DEV BY ZENON.TK
+clear
+clear
+cr
+IP=$(wget -qO- ipv4.icanhazip.com);
+Login=arch19`</dev/urandom tr -dc X-Z0-9 | head -c4`
+echo "     เมนูตั้งชื่อและรหัสอัตโนมัติ "
+echo "     โดยเฉพาะเวป vultr ต้องใช้เมนูนี้ "
+echo " "
+read -p "     ป้อนจำนวนวันที่ใช้งานได้: " TimeActive
+Passwd=`</dev/urandom tr -dc a-f0-9 | head -c9`
+useradd -e `date -d "$TimeActive days" +"%Y-%m-%d"` -s /bin/false -M $Login
+exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
+echo -e "$Passwd\n$Passwd\n"|passwd $Login &> /dev/null
+echo -e "http://$IP:81/client.ovpn"
+sleep 0.2
+echo -e "\033[01;31mUsername: $Login \033[0m"
+echo -e "\033[01;31mPassword: $Passwd \033[0m"
+echo -e "-----------------------------"
+echo -e "  วันหมดอายุ : $exp"
+exit
+;;
+2)
+if [ -d /home/vps/public_html/ovpn ]; then
+echo
+else
+mkdir /home/vps/public_html/ovpn
+fi
+clear
+clear
+cr
+echo "    ╭━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+echo "    ┣ ติดตั้งไฟล์ Ovpn ลง Panel      "
+echo "    ┣━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+read -p "    ┣ Host/IP    : " Host
+read -p "    ┣ ใส่เพโหลด  : " payload
+read -p "    ┣ ตั้งชื่อไฟล์   : " Name
+read -p "    ╰ ต้องการบันทึกหรือไม่ y/n  : " Edit
+if [[ "$Edit" = "y" || "$Edit" = "Y" ]]; then
+if [ -e /home/vps/public_html/ovpn/$Name.ovpn ]; then
+clear
+clear
+cr
+echo "    ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+echo "    ┣ $Name มีชื่ออยู่ในระบบแล้ว      "
+echo "    ╰━━━┳━━━━━━━━━━━┳━━━━━━━━━━━╯"
+echo "    ╭━━━┻━━━━━━━━━━━┻━━━━━━━━━╮"
+echo "    ┃ ต้องการติดตั้งทับไฟล์เดิมหรือไม่   "
+echo "    ┣━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+read -p "    ╰━━  {y/n} : " Enter
+if [[ "$Enter" = "y" || "$Enter" = "Y" ]]; then
+clear
+clear
+elif [[ "$Enter" = "$Enter" ]]; then
+clear
+clear
+cr
+echo "           ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+           ┣ ยกเลิกการตั้งค่าไฟล์
+           ╰━━━━━━━━━━━━━━╯
+ "
+exit 0
+fi
+else
+echo zenonnew
+fi
+grep -E "^proto tcp" /etc/openvpn/1194.conf >/dev/null
+if [ $? -eq 0 ]; then
+proto="proto tcp"
+if [[ "$payload" = "" ]]; then
+remote="remote $Host 1194"
+else
+remote="remote $Host:1194@$payload 1194"
+fi
+proxy="http-proxy $Host 8080"
+remote1="remote scrip_xxx 999 udp"
+
+else
+proto="proto udp"
+remote="remote $Host 1194"
+fi
+
+cat > /home/vps/public_html/ovpn/$Name.ovpn <<-zenonnew
+auth-user-pass
+client
+dev tun
+$proto
+$remote1
+$remote
+$proxy
+connect-retry 1
+connect-timeout 120
+resolv-retry infinite
+route-method exe
+nobind
+ping 5
+ping-restart 30
+persist-key
+persist-tun
+persist-remote-ip
+mute-replay-warnings
+verb 3
+cipher none
+comp-lzo
+script-security 3
+
+<key>
+$(cat /etc/openvpn/client-key.pem)
+</key>
+<cert>
+$(cat /etc/openvpn/client-cert.pem)
+</cert>
+<ca>
+$(cat /etc/openvpn/ca.pem)
+</ca>
+zenonnew
+
+clear
+clear
+cr
+echo "        ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        ┣ สร้างไฟล์เรียบร้อย
+        ┣ โปรดนำลิ้งด้านล่างไปตั้งค่าเพิ่มไฟล์ในเว็บ      
+        ┣ เข้าเว็บไซต์ > ตั้งค่า > เพิ่มไฟล์Ovpn
+        ┣ LinkDownload  : http://$IP:81/ovpn/$Name.ovpn
+        ╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ "
+exit 0
+elif [[ "$Edit" = "$Edit" ]]; then
+clear
+clear
+cr
+echo "           ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+           ┣ ไม่ได้บันทึกการตั้งค่า
+           ╰━━━━━━━━━━━━━━╯
+ "
+exit 0
+fi
+;;
+$opcao )
+clear
+clear
+cr
+echo -e "${z1}        ╭━━━━━━━━━━━━━━━━━━━━━━╮ 
+        ┣    พิมพ์คำสั่งไม่ถูกต้อง
+        ╰━━━━━━━━━━━━━━━━━━━━━━╯${z7}"
+echo -e ""
+exit 0
+;;
 34)
 #!/bin/bash
 #DEV BY ZENON.TK
@@ -2455,7 +3193,7 @@ read -p "Authtoken   = "authtoken
 00)
 clear
 cd /usr/bin
-wget -q -O z "$zenon/menu2"
+wget -q -O z "$zenon/menu"
 chmod +x z
 z
 ;;
